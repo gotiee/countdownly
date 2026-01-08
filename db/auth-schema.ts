@@ -1,5 +1,12 @@
-import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, boolean, index } from "drizzle-orm/pg-core";
+import { is, relations } from "drizzle-orm";
+import {
+  pgTable,
+  text,
+  timestamp,
+  boolean,
+  index,
+  uuid,
+} from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -93,3 +100,33 @@ export const accountRelations = relations(account, ({ one }) => ({
     references: [user.id],
   }),
 }));
+
+export const countdown = pgTable(
+  "countdown",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    title: text("title").notNull(),
+    slug: text("slug").unique(),
+    targetDate: timestamp("target_date", { withTimezone: true }).notNull(),
+    timezone: text("timezone").notNull(),
+    description: text("description"),
+    color: text("color"),
+    isPublic: boolean("is_public").default(false).notNull(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => {
+    return [
+      index("countdown_target_date_idx").on(table.targetDate),
+      index("countdown_is_public_idx").on(table.isPublic),
+    ];
+  }
+);
