@@ -1,0 +1,18 @@
+services:
+  countdownly:
+    platform: linux/amd64
+    container_name: countdownly
+    image: postgres:17
+    environment:
+      POSTGRES_USER: countdownly
+      POSTGRES_PASSWORD: countdownly
+      POSTGRES_DB: countdownly
+      PGDATA: /data/postgres
+    volumes:
+      - postgres-countdownly:/data/postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+volumes:
+  postgres-countdownly:
