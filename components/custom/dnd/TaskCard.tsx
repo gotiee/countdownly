@@ -1,32 +1,15 @@
-import type { UniqueIdentifier } from "@dnd-kit/core";
+"use client";
+
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { cva } from "class-variance-authority";
-import { GripVertical } from "lucide-react";
-import { ColumnId } from "./KanbanBoard";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 
-export interface Task {
-  id: UniqueIdentifier;
-  columnId: ColumnId;
+export type Task = {
+  id: string;
   content: string;
-}
+};
 
-interface TaskCardProps {
-  task: Task;
-  isOverlay?: boolean;
-}
-
-export type TaskType = "Task";
-
-export interface TaskDragData {
-  type: TaskType;
-  task: Task;
-}
-
-export function TaskCard({ task, isOverlay }: TaskCardProps) {
+export function TaskCard({ task }: { task: Task }) {
   const {
     setNodeRef,
     attributes,
@@ -34,54 +17,22 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
     transform,
     transition,
     isDragging,
-  } = useSortable({
-    id: task.id,
-    data: {
-      type: "Task",
-      task,
-    } satisfies TaskDragData,
-    attributes: {
-      roleDescription: "Task",
-    },
-  });
+  } = useSortable({ id: task.id });
 
   const style = {
-    transition,
     transform: CSS.Translate.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    cursor: "grab",
   };
 
-  const variants = cva("", {
-    variants: {
-      dragging: {
-        over: "ring-2 opacity-30",
-        overlay: "ring-2 ring-primary",
-      },
-    },
-  });
-
   return (
-    <Card
-      ref={setNodeRef}
-      style={style}
-      className={variants({
-        dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
-      })}
-    >
-      <CardHeader className="px-3 py-3 space-between flex flex-row border-b-2 border-secondary relative">
-        <Button
-          variant={"ghost"}
-          {...attributes}
-          {...listeners}
-          className="p-1 text-secondary-foreground/50 -ml-2 h-auto cursor-grab"
-        >
-          <span className="sr-only">Move task</span>
-          <GripVertical />
-        </Button>
-        <Badge variant={"outline"} className="ml-auto font-semibold">
-          Task
-        </Badge>
-      </CardHeader>
-      <CardContent className="px-3 pt-3 pb-6 text-left whitespace-pre-wrap">
+    <Card ref={setNodeRef} style={style} className="mb-2">
+      <CardContent
+        {...attributes}
+        {...listeners}
+        className="p-4 flex items-center"
+      >
         {task.content}
       </CardContent>
     </Card>

@@ -16,6 +16,7 @@ import {
   ChevronRight,
   Clock,
   ClockFading,
+  Settings,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -26,6 +27,11 @@ const adminNavItems = [
     icon: ClockFading,
     href: "/admin",
     count: 24,
+  },
+  {
+    title: "Settings",
+    icon: Settings,
+    href: "/admin/settings",
   },
 ];
 
