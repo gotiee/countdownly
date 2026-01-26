@@ -21,6 +21,11 @@ import {
 import Link from "next/link";
 
 import SidebarFooterContent from "./sidebar-footer-content";
+import { db } from "@/db/drizzle";
+import { countdown } from "@/db/auth-schema";
+import { count, eq } from "drizzle-orm";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 const adminNavItems = [
   {
     title: "Countdowns",
@@ -36,6 +41,20 @@ const adminNavItems = [
 ];
 
 export async function AppSidebar() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session?.user) {
+    return null;
+  }
+
+  const countdowns = await db
+    .select({ count: count() })
+    .from(countdown)
+    .where(eq(countdown.userId, session.user.id));
+
+  adminNavItems[0].count = countdowns[0]?.count || 0;
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>

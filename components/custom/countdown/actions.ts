@@ -23,9 +23,6 @@ export async function deleteCountdown(id: string) {
 }
 
 export async function togglePublic(id: string, isPublic: boolean) {
-  await db
-    .update(countdown)
-    .set({ isPublic: !isPublic })
-    .where(eq(countdown.id, id));
+  await db.update(countdown).set({ isPublic }).where(eq(countdown.id, id));
   revalidatePath("/admin/countdowns");
 }

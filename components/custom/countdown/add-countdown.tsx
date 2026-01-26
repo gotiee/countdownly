@@ -85,8 +85,11 @@ export function AddCountdownForm({ userId }: { userId: string }) {
               id="isPublic"
               name="isPublic"
               checked={newCountdown.isPublic}
-              onCheckedChange={(checked) =>
-                setNewCountdown({ ...newCountdown, isPublic: checked })
+              onClick={(e) =>
+                setNewCountdown({
+                  ...newCountdown,
+                  isPublic: !newCountdown.isPublic,
+                })
               }
               className="col-span-3"
             />

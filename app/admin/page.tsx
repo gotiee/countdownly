@@ -24,7 +24,7 @@ import { redirect } from "next/navigation";
 import { AddCountdownForm } from "@/components/custom/countdown/add-countdown";
 import { TogglePublicForm } from "@/components/custom/countdown/toggle-public";
 import { CopyLinkButton } from "@/components/custom/countdown/copy-link-button";
-import { DeleteCountdownForm } from "@/components/custom/countdown/delete-countdown";
+import { DeleteCountdownDialog } from "@/components/custom/countdown/delete-countdown";
 
 export type Countdown = {
   id: string;
@@ -44,9 +44,8 @@ export default async function CountdownsPage() {
   const countdowns = await db
     .select()
     .from(countdown)
-    .where(eq(countdown.userId, session.user.id));
-
-  console.log(countdowns);
+    .where(eq(countdown.userId, session.user.id))
+    .orderBy(countdown.targetDate, countdown.id);
 
   const getTimeRemaining = (targetDate: Date) => {
     const now = new Date();
@@ -93,7 +92,7 @@ export default async function CountdownsPage() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <CopyLinkButton countdownId={c.id} />
-                    <DeleteCountdownForm countdownId={c.id} />
+                    <DeleteCountdownDialog countdownId={c.id} />
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>

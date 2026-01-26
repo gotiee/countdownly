@@ -1,6 +1,7 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import "../globals.css";
 import { AppSidebar } from "@/components/custom/sidebar/app-sidebar";
+import { Toaster } from "sonner";
 
 export default function RootLayout({
   children,
@@ -11,6 +12,7 @@ export default function RootLayout({
     <SidebarProvider>
       <AppSidebar />
       <main className="flex-1 overflow-auto p-4">{children}</main>
+      <Toaster />
     </SidebarProvider>
   );
 }

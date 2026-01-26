@@ -2,6 +2,7 @@
 
 import { Switch } from "@/components/ui/switch";
 import { togglePublic } from "./actions";
+import { useState } from "react";
 
 export function TogglePublicForm({
   id,
@@ -10,9 +11,14 @@ export function TogglePublicForm({
   id: string;
   isPublic: boolean;
 }) {
+  const [isPublicState, setIsPublicState] = useState<boolean>(isPublic);
   return (
-    <form action={togglePublic.bind(null, id, isPublic)}>
-      <Switch checked={isPublic} />
-    </form>
+    <Switch
+      checked={isPublicState}
+      onCheckedChange={(checked) => {
+        setIsPublicState(checked);
+        togglePublic(id, checked);
+      }}
+    />
   );
 }
