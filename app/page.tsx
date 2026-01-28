@@ -1,6 +1,6 @@
 import { db } from "@/db/drizzle";
 import { countdown } from "@/db/auth-schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { PublicCountdownList } from "@/components/custom/countdown/public-countdown-list";
 
 export default async function PublicCountdownsPage() {
@@ -8,7 +8,7 @@ export default async function PublicCountdownsPage() {
     .select()
     .from(countdown)
     .where(eq(countdown.isPublic, true))
-    .orderBy(countdown.targetDate);
+    .orderBy(desc(countdown.targetDate), countdown.createdAt);
 
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "2rem" }}>

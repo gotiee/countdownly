@@ -10,7 +10,8 @@ export async function createCountdown(formData: FormData, userId: string) {
     title: formData.get("title") as string,
     targetDate: new Date(formData.get("targetDate") as string),
     timezone: formData.get("timezone") as string,
-    isPublic: formData.get("isPublic") === "true",
+    isPublic: formData.get("isPublic") === "on",
+    displayInDays: formData.get("displayInDays") === "on",
     userId,
   };
   await db.insert(countdown).values(data);
@@ -24,5 +25,10 @@ export async function deleteCountdown(id: string) {
 
 export async function togglePublic(id: string, isPublic: boolean) {
   await db.update(countdown).set({ isPublic }).where(eq(countdown.id, id));
+  revalidatePath("/admin/countdowns");
+}
+
+export async function toggleDisplayInDays(id: string, displayInDays: boolean) {
+  await db.update(countdown).set({ displayInDays }).where(eq(countdown.id, id));
   revalidatePath("/admin/countdowns");
 }

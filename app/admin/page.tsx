@@ -14,10 +14,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
-import { enGB, fr } from "date-fns/locale";
+import { enGB } from "date-fns/locale";
 import { db } from "@/db/drizzle";
 import { countdown } from "@/db/auth-schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -25,12 +25,14 @@ import { AddCountdownForm } from "@/components/custom/countdown/add-countdown";
 import { TogglePublicForm } from "@/components/custom/countdown/toggle-public";
 import { CopyLinkButton } from "@/components/custom/countdown/copy-link-button";
 import { DeleteCountdownDialog } from "@/components/custom/countdown/delete-countdown";
+import { ToggleDisplayInDays } from "@/components/custom/countdown/togge-display-in-day";
 
 export type Countdown = {
   id: string;
   title: string;
   targetDate: Date;
   timezone: string;
+  displayInDays: boolean;
   isPublic: boolean;
   userId: string;
 };
@@ -45,7 +47,7 @@ export default async function CountdownsPage() {
     .select()
     .from(countdown)
     .where(eq(countdown.userId, session.user.id))
-    .orderBy(countdown.targetDate, countdown.id);
+    .orderBy(desc(countdown.targetDate), countdown.id);
 
   const getTimeRemaining = (targetDate: Date) => {
     const now = new Date();
@@ -56,7 +58,7 @@ export default async function CountdownsPage() {
   };
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Countdown Management</h1>
         <AddCountdownForm userId={session.user.id} />
@@ -68,6 +70,7 @@ export default async function CountdownsPage() {
             <TableHead>Title</TableHead>
             <TableHead>Target Date</TableHead>
             <TableHead>Time Remaining</TableHead>
+            <TableHead>Display in day</TableHead>
             <TableHead>Public</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
@@ -77,9 +80,15 @@ export default async function CountdownsPage() {
             <TableRow key={c.id}>
               <TableCell className="font-medium">{c.title}</TableCell>
               <TableCell>
-                {format(c.targetDate, "PPpp", { locale: fr })}
+                {format(c.targetDate, "PPpp", { locale: enGB })}
               </TableCell>
               <TableCell>{getTimeRemaining(c.targetDate)}</TableCell>
+              <TableCell>
+                <ToggleDisplayInDays
+                  id={c.id}
+                  displayInDays={c.displayInDays}
+                />
+              </TableCell>
               <TableCell>
                 <TogglePublicForm id={c.id} isPublic={c.isPublic} />
               </TableCell>

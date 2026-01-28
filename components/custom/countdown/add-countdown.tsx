@@ -21,6 +21,7 @@ export function AddCountdownForm({ userId }: { userId: string }) {
     targetDate: new Date(Date.now() + 86400000).toISOString().slice(0, 16),
     timezone: "Europe/Paris",
     isPublic: false,
+    displayInDays: true,
   });
 
   return (
@@ -98,6 +99,16 @@ export function AddCountdownForm({ userId }: { userId: string }) {
               name="isPublic"
               value={String(newCountdown.isPublic)}
             />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="displayInDays">Display in Days</Label>
+            <Switch
+              id="displayInDays"
+              name="displayInDays"
+              defaultChecked={true}
+              className="col-span-3"
+            />
+            <input type="hidden" name="displayInDays" value="true" />
           </div>
           <Button type="submit" className="w-full">
             Add

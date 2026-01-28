@@ -8,6 +8,7 @@ type Countdown = {
   title: string;
   targetDate: Date;
   timezone: string;
+  displayInDays: boolean;
 };
 
 export function PublicCountdownList({
@@ -62,7 +63,7 @@ export function PublicCountdownList({
             </p>
           </div>
           <div style={{ fontSize: "1.1rem", fontWeight: "bold" }}>
-            {formatTimeRemaining(new Date(c.targetDate), now)}
+            {formatTimeRemaining(new Date(c.targetDate), now, c.displayInDays)}
           </div>
         </li>
       ))}

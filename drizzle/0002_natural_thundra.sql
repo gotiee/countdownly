@@ -1,0 +1,1 @@
+ALTER TABLE "countdown" ADD COLUMN "display_in_days" boolean DEFAULT true NOT NULL;

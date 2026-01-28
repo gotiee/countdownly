@@ -24,7 +24,7 @@ export default async function PublicCountdownPage({
     );
   }
 
-  const { title, targetDate, timezone } = countdownSelected[0];
+  const { title, targetDate, timezone, displayInDays } = countdownSelected[0];
   const isPast = new Date(targetDate) < new Date();
 
   return (
@@ -36,7 +36,10 @@ export default async function PublicCountdownPage({
           <p style={{ marginBottom: "0.5rem", color: "#666" }}>
             Time remaining:
           </p>
-          <CountdownTimer targetDate={targetDate} />
+          <CountdownTimer
+            targetDate={targetDate}
+            displayInDays={displayInDays}
+          />
         </div>
       ) : (
         <div>
