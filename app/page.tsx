@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { db } from "@/db/drizzle";
 import { countdown } from "@/db/auth-schema";
 import { desc, eq } from "drizzle-orm";
